@@ -71,7 +71,8 @@ string unit::showUnitTypeName()
 
 class unitNum:unit{
 	public:
-		unitNum(string unitNumStr):unit(){}//parse the value
+		int parse(string unitNumStr);//parse the value
+		unitNum(string unitNumStr):unit(){parse(unitNumStr);}
 		int showVal();//return the value of the unitNum
 		//support the operator
 		bool operator == (const unitNum &A);//return true if both unit and val equal
@@ -87,12 +88,12 @@ class unitNum:unit{
 		double val;
 };
 
-unitNum::unitNum(string unitNumStr):unit(){
+int unitNum::parse(string unitNumStr){
 	double integer = 0,decimal = 0;
 	int d_cnt = 0;
 	int dot = 0;
 	for(int i = 0;i < unitNumStr.length();i++){
-		char tmp = unitNum[i];
+		char tmp = unitNumStr[i];
 		if(tmp == ' ') continue;
 		if(!((tmp >= 'a' && tmp <= 'z') || (tmp >= 'A' &&
 		tmp <= 'Z') || (tmp >= '0' && tmp <= '9'))) break;
