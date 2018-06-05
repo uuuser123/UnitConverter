@@ -74,6 +74,7 @@ class unitNum:unit{
 		int parse(string unitNumStr);//parse the value
 		unitNum(string unitNumStr):unit(){parse(unitNumStr);}
 		int showVal();//return the value of the unitNum
+		int convertUnit(string newUnit);
 		//support the operator
 		bool operator == (const unitNum &A);//return true if both unit and val equal
 		bool operator < (const unitNum &A);
@@ -87,6 +88,15 @@ class unitNum:unit{
 	private:
 		double val;
 };
+
+int unitNum::convertUnit(string newUnit)
+{
+	double ret=convert(newUnit);
+	if(ret==-1)
+		return -1;
+	val*=ret;
+	return 0;
+}
 
 int unitNum::parse(string unitNumStr){
 	double integer = 0,decimal = 0;
