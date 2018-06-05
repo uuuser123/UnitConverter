@@ -2,13 +2,14 @@
 
 using namespace std;
 
-string unitTypeName[0]={};
-string unitName[0][0]={};
-double coefficient[0][0]={};
+const int maxUnitNum=100,maxUnitType=10;
+string unitTypeName[maxUnitType]={"length","mass","time","electric current","thermodynamic temperature","amount of substance","luminous intensity"};
+string unitName[maxUnitType][maxUnitNum]={{"mm","cm","m","km","inch","feet"}};
+double coefficient[maxUnitType][maxUnitNum]={{1e-3,1e-2,1,1e3}};
 
 class unit{
 	public:
-		unit(){}//parse the unitId and the unitType
+		unit(){}
 		~unit(){}
 		double convert(string newUnit);//change the unit and return coefficient(if the unit type is different return -1)
 		int set(string newUnit);//change the unit and return 0 if suceed(only use if the unit type is diffierent)
@@ -18,6 +19,55 @@ class unit{
 		int unitId;
 		int unitType;
 };
+
+double unit::convert(string newUnit)
+{
+	for(int i=0;i<maxUnitType;i++)
+	{
+		for(int j=0;j<maxUnitNum;j++)
+		{
+			if(newUnit==unitName[i][j])
+			{
+				if(i!=unitType)
+				{
+					return -1;
+				}
+				double ret=coefficient[unitType][unitId]/coefficient[unitType][j];
+				unitId=j;
+				unitType=i;
+				return ret;
+			}
+		}
+	}
+	return -1;
+}
+
+int unit::set(string newUnit)
+{
+	for(int i=0;i<maxUnitType;i++)
+	{
+		for(int j=0;j<maxUnitNum;j++)
+		{
+			if(newUnit==unitName[i][j])
+			{
+				unitId=j;
+				unitType=i;
+				return 0;
+			}
+		}
+	}
+	return 1;
+}
+
+string unit::showUnit()
+{
+	return unitName[unitType][unitId];
+}
+
+string unit::showUnitTypeName()
+{
+	return unitTypeName[unitType];
+}
 
 class unitNum:unit{
 	public:
