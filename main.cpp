@@ -4,8 +4,8 @@ using namespace std;
 
 const int maxUnitNum=100,maxUnitType=10;
 string unitTypeName[maxUnitType]={"length","mass","time","electric current","thermodynamic temperature","amount of substance","luminous intensity"};
-string unitName[maxUnitType][maxUnitNum]={{"mm","cm","m","km","inch","feet"}};
-double coefficient[maxUnitType][maxUnitNum]={{1e-3,1e-2,1,1e3}};
+string unitName[maxUnitType][maxUnitNum]={{"mm","cm","m","km","inch","feet"},{"mg","g","kg","t"}};
+double coefficient[maxUnitType][maxUnitNum]={{1e-3,1e-2,1,1e3,0.0254,0.3048},{1e-3,1,1e3,1e6}};
 
 class unit{
 	public:
