@@ -22,14 +22,14 @@ class unit{
 class unitNum:unit{
 	public:
 		unitNum(string unitNumStr):unit(){set("");}//parse the value
-		int showVal();//return the value of the unitNum
+		double showVal();//return the value of the unitNum
 		int change(string A);//change the val and the unit
 		//support the operator
-		bool operator ==(const unitNum &A);//return true if both unit and val equal
-		bool operator <(const unitNum &A);
-		bool operator >(const unitNum &A);
-		bool operator <=(const unitNum &A);
-		bool operator >=(const unitNum &A);
+		bool operator == (const unitNum &A);//return true if both unit and val equal
+		bool operator < (const unitNum &A);
+		bool operator > (const unitNum &A);
+		bool operator <= (const unitNum &A);
+		bool operator >= (const unitNum &A);
 		unitNum operator + (const unitNum &A);
 		unitNum operator - (const unitNum &A);
 		unitNum operator * (const unitNum &A);
@@ -38,6 +38,38 @@ class unitNum:unit{
 		double val;
 };
 
+double unitNum::showVal(){
+	double integer = 0,decimal = 0;
+	int d_cnt = 0;
+	int dot = 0;
+	for(int i = 0;i < unitNumStr.length();i++){
+		char tmp = unitNum[i];
+		if(tmp == ' ') continue;
+		if(!((tmp >= 'a' && tmp <= 'z') || (tmp >= 'A' &&
+		tmp <= 'Z') || (tmp >= '0' && tmp <= '9'))) return -1;
+		if((tmp >= 'a' && tmp <= 'z') || (tmp >= 'A' && tmp <= 'Z')){
+			set(unitNumStr.substr(i));
+			while(d_cnt--){
+				decimal *= 0.1;
+			}
+			return integer + decimal;
+		}
+		if(tmp == '.'){
+			dot = 1;
+			continue;
+		}
+		if(!dot){
+			integer *= 10;
+			integer += tmp - '0';
+		}
+		else{
+			decimal *= 10;
+			decimal += tmp - '0';
+			d_cnt++;
+		}
+	}
+	return 0;
+}
 class console{
 	public:
 		console(){}
