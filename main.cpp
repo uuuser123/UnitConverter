@@ -130,6 +130,67 @@ int unitNum::parse(string unitNumStr){
 	}
 }
 
+bool unitNum::operator == (const unitNum &A){
+	unitNum Tmp = A;
+	Tmp.convertUnit(showUnit());
+	return val == Tmp.val && Tmp.showUnit()==showUnit();
+}
+
+bool unitNum::operator >= (const unitNum &A){
+	unitNum Tmp = A;
+	Tmp.convertUnit(showUnit());
+	return val >= Tmp.val && Tmp.showUnit()==showUnit();
+}
+
+bool unitNum::operator <= (const unitNum &A){
+	unitNum Tmp = A;
+	Tmp.convertUnit(showUnit());
+	return val <= Tmp.val && Tmp.showUnit()==showUnit();
+}
+
+bool unitNum::operator > (const unitNum &A){
+	unitNum Tmp = A;
+	Tmp.convertUnit(showUnit());
+	return val > Tmp.val && Tmp.showUnit()==showUnit();
+}
+
+bool unitNum::operator < (const unitNum &A){
+	unitNum Tmp = A;
+	Tmp.convertUnit(showUnit());
+	return val < Tmp.val && Tmp.showUnit()==showUnit();
+}
+
+unitNum unitNum::operator + (const unitNum &A){
+	unitNum Tmp = A;
+	unitNum Sum = A;
+	Tmp.convertUnit(showUnit());
+	Sum.val = val + A.val;
+	return Sum;
+}
+
+unitNum unitNum::operator - (const unitNum &A){
+	unitNum Tmp = A;
+	unitNum Sub = A;
+	Tmp.convertUnit(showUnit());
+	Sub.val = val - A.val;
+	return Sub;
+}
+
+unitNum unitNum::operator * (const unitNum &A){
+	unitNum Tmp = A;
+	unitNum Mul = A;
+	Tmp.convertUnit(showUnit());
+	Mul.val = val * A.val;
+	return Mul;
+}
+
+unitNum unitNum::operator / (const unitNum &A){
+	unitNum Tmp = A;
+	unitNum Div = A;
+	Tmp.convertUnit(showUnit());
+	Div.val = val * A.val;
+	return Div;
+}
 
 class console{
 	public:
