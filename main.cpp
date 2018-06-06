@@ -73,7 +73,7 @@ class unitNum:unit{
 	public:
 		int parse(string unitNumStr);//parse the value
 		unitNum(string unitNumStr):unit(){parse(unitNumStr);}
-		int showVal();//return the value of the unitNum
+		double showVal();//return the value of the unitNum
 		int convertUnit(string newUnit);
 		//support the operator
 		bool operator == (const unitNum &A);//return true if both unit and val equal
@@ -88,6 +88,11 @@ class unitNum:unit{
 	private:
 		double val;
 };
+
+double unitNum::showVal()
+{
+	return val;
+}
 
 int unitNum::convertUnit(string newUnit)
 {
@@ -210,7 +215,12 @@ int console::startConsole(){
 
 
 int main(){
-	
+	//debug code
+	unitNum A=unitNum("1km");
+	printf("%lf\n",A.showVal());
+	A.convertUnit("m");
+	printf("%lf\n",A.showVal());
+	//end
 	return 0;
 }
 
