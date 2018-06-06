@@ -107,7 +107,7 @@ int unitNum::parse(string unitNumStr){
 	double integer = 0,decimal = 0;
 	int d_cnt = 0;
 	int dot = 0;
-	for(int i = 0;i < unitNumStr.length();i++){
+	for(int i = 0;i < (int)unitNumStr.length();i++){
 		char tmp = unitNumStr[i];
 		if(tmp == ' ') continue;
 		if(tmp == '.'){
@@ -134,6 +134,7 @@ int unitNum::parse(string unitNumStr){
 			d_cnt++;
 		}
 	}
+	return 0;
 }
 
 bool unitNum::operator == (const unitNum &A){
@@ -219,7 +220,7 @@ int main(){
 	//debug code
 	unitNum A=unitNum("124.13524km");
 	printf("%lf\n",A.showVal());
-	A.convertUnit("m");
+	A.convertUnit("feet");
 	printf("%lf\n",A.showVal());
 	//end
 	return 0;
