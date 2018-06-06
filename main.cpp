@@ -110,6 +110,10 @@ int unitNum::parse(string unitNumStr){
 	for(int i = 0;i < unitNumStr.length();i++){
 		char tmp = unitNumStr[i];
 		if(tmp == ' ') continue;
+		if(tmp == '.'){
+			dot = 1;
+			continue;
+		}
 		if(!((tmp >= 'a' && tmp <= 'z') || (tmp >= 'A' &&
 		tmp <= 'Z') || (tmp >= '0' && tmp <= '9'))) break;
 		if((tmp >= 'a' && tmp <= 'z') || (tmp >= 'A' && tmp <= 'Z')){
@@ -119,10 +123,6 @@ int unitNum::parse(string unitNumStr){
 			}
 			val = integer + decimal;
 			return 0;
-		}
-		if(tmp == '.'){
-			dot = 1;
-			continue;
 		}
 		if(!dot){
 			integer *= 10;
@@ -217,7 +217,7 @@ int console::startConsole(){
 
 int main(){
 	//debug code
-	unitNum A=unitNum("1km");
+	unitNum A=unitNum("124.13524km");
 	printf("%lf\n",A.showVal());
 	A.convertUnit("m");
 	printf("%lf\n",A.showVal());
