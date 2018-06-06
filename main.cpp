@@ -69,7 +69,7 @@ string unit::showUnitTypeName()
 	return unitTypeName[unitType];
 }
 
-class unitNum:unit{
+class unitNum:public unit{
 	public:
 		int parse(string unitNumStr);//parse the value
 		unitNum(string unitNumStr):unit(){parse(unitNumStr);}
@@ -217,12 +217,16 @@ int console::startConsole(){
 
 
 int main(){
-	//debug code
-	unitNum A=unitNum("124.13524km");
-	printf("%lf\n",A.showVal());
-	A.convertUnit("feet");
-	printf("%lf\n",A.showVal());
-	//end
+	/*
+	sample code
+	string A,B;
+	cin>>A;
+	unitNum C=unitNum(A);
+	cin>>B;
+	C.convertUnit(B);
+	cout<<C.showVal()<<C.showUnit()<<endl;
+	end
+	*/
 	return 0;
 }
 
