@@ -118,6 +118,7 @@ int unitNum::parse(string unitNumStr){
 				decimal *= 0.1;
 			}
 			val = integer + decimal;
+			return 0;
 		}
 		if(tmp == '.'){
 			dot = 1;
