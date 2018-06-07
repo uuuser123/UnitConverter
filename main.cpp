@@ -4,8 +4,8 @@ using namespace std;
 
 const int maxUnitNum=100,maxUnitType=10;
 string unitTypeName[maxUnitType]={"length","mass","time","electric current","thermodynamic temperature","amount of substance","luminous intensity"};
-string unitName[maxUnitType][maxUnitNum]={{"mm","cm","m","km","inch","feet"},{"mg","g","kg","t"}};
-double coefficient[maxUnitType][maxUnitNum]={{1e-3,1e-2,1,1e3,0.0254,0.3048},{1e-3,1,1e3,1e6}};
+string unitName[maxUnitType][maxUnitNum]={{"mm","cm","m","km","inch","feet"},{"mg","g","kg","t"},{"ms","s","min","h"},{"mA","A","kA"}};
+double coefficient[maxUnitType][maxUnitNum]={{1e-3,1e-2,1,1e3,0.0254,0.3048},{1e-3,1,1e3,1e6},{1e-3,1,60,3600},{1e-3,1,1e3}};
 
 class unit{
 	public:
@@ -76,15 +76,15 @@ class unitNum:public unit{
 		double showVal();//return the value of the unitNum
 		int convertUnit(string newUnit);
 		//support the operator
-		bool operator == (const unitNum &A);//return true if both unit and val equal
-		bool operator < (const unitNum &A);
-		bool operator > (const unitNum &A);
-		bool operator <= (const unitNum &A);
-		bool operator >= (const unitNum &A);
-		unitNum operator + (const unitNum &A);
-		unitNum operator - (const unitNum &A);
-		unitNum operator * (const unitNum &A);
-		unitNum operator / (const unitNum &A);
+		bool operator == (unitNum A);//return true if both unit and val equal
+		bool operator < (unitNum A);
+		bool operator > (unitNum A);
+		bool operator <= (unitNum A);
+		bool operator >= (unitNum A);
+		unitNum operator + (unitNum A);
+		unitNum operator - (unitNum A);
+		unitNum operator * (unitNum A);
+		unitNum operator / (unitNum A);
 	private:
 		double val;
 };
@@ -137,66 +137,41 @@ int unitNum::parse(string unitNumStr){
 	return 0;
 }
 
-bool unitNum::operator == (const unitNum &A){
-	unitNum Tmp = A;
-	Tmp.convertUnit(showUnit());
-	return val == Tmp.val && Tmp.showUnit()==showUnit();
+bool unitNum::operator == (unitNum A){
+	A.convertUnit(showUnit());
+	return val == A.val && A.showUnit()==showUnit();
 }
 
-bool unitNum::operator >= (const unitNum &A){
-	unitNum Tmp = A;
-	Tmp.convertUnit(showUnit());
-	return val >= Tmp.val && Tmp.showUnit()==showUnit();
+bool unitNum::operator >= (unitNum A){
+	A.convertUnit(showUnit());
+	return val >= A.val && A.showUnit()==showUnit();
 }
 
-bool unitNum::operator <= (const unitNum &A){
-	unitNum Tmp = A;
-	Tmp.convertUnit(showUnit());
-	return val <= Tmp.val && Tmp.showUnit()==showUnit();
+bool unitNum::operator <= (unitNum A){
+	A.convertUnit(showUnit());
+	return val <= A.val && A.showUnit()==showUnit();
 }
 
-bool unitNum::operator > (const unitNum &A){
-	unitNum Tmp = A;
-	Tmp.convertUnit(showUnit());
-	return val > Tmp.val && Tmp.showUnit()==showUnit();
+bool unitNum::operator > (unitNum A){
+	A.convertUnit(showUnit());
+	return val > A.val && A.showUnit()==showUnit();
 }
 
-bool unitNum::operator < (const unitNum &A){
-	unitNum Tmp = A;
-	Tmp.convertUnit(showUnit());
-	return val < Tmp.val && Tmp.showUnit()==showUnit();
+bool unitNum::operator < (unitNum A){
+	A.convertUnit(showUnit());
+	return val < A.val && A.showUnit()==showUnit();
 }
 
-unitNum unitNum::operator + (const unitNum &A){
-	unitNum Tmp = A;
-	unitNum Sum = A;
-	Tmp.convertUnit(showUnit());
-	Sum.val = val + A.val;
-	return Sum;
+unitNum unitNum::operator + (unitNum A){
+	A.convertUnit(showUnit());
+	A.val = val + A.val;
+	return A;
 }
 
-unitNum unitNum::operator - (const unitNum &A){
-	unitNum Tmp = A;
-	unitNum Sub = A;
-	Tmp.convertUnit(showUnit());
-	Sub.val = val - A.val;
-	return Sub;
-}
-
-unitNum unitNum::operator * (const unitNum &A){
-	unitNum Tmp = A;
-	unitNum Mul = A;
-	Tmp.convertUnit(showUnit());
-	Mul.val = val * A.val;
-	return Mul;
-}
-
-unitNum unitNum::operator / (const unitNum &A){
-	unitNum Tmp = A;
-	unitNum Div = A;
-	Tmp.convertUnit(showUnit());
-	Div.val = val * A.val;
-	return Div;
+unitNum unitNum::operator - (unitNum A){
+	A.convertUnit(showUnit());
+	A.val = val - A.val;
+	return A;
 }
 
 class console{
@@ -217,16 +192,13 @@ int console::startConsole(){
 
 
 int main(){
-	/*
-	sample code
 	string A,B;
 	cin>>A;
 	unitNum C=unitNum(A);
 	cin>>B;
-	C.convertUnit(B);
-	cout<<C.showVal()<<C.showUnit()<<endl;
-	end
-	*/
+	unitNum D = unitNum(B);
+	bool E = C == D;
+	cout << E << endl;
 	return 0;
 }
 
