@@ -2,11 +2,13 @@
 
 using namespace std;
 
-const int maxUnitNum=100,maxUnitType=10;
-string unitTypeName[maxUnitType]={"length","mass","time","electric current","thermodynamic temperature","amount of substance","luminous intensity"};
+const int maxUnitNum=100,maxUnitType=4;
+/*string unitTypeName[maxUnitType]={"length","mass","time","electric current","thermodynamic temperature","amount of substance","luminous intensity"};
+*/
+string unitTypeName[maxUnitType]={"length","mass","time","electric current"};
 string unitName[maxUnitType][maxUnitNum]={{"mm","cm","m","km","inch","feet"},{"mg","g","kg","t"},{"ms","s","min","h"},{"mA","A","kA"}};
-double coefficient[maxUnitType][maxUnitNum]={{1e-3,1e-2,1,1e3,0.0254,0.3048},{1e-3,1,1e3,1e6},{1e-3,1,60,3600},{1e-3,1,1e3}};
 
+double coefficient[maxUnitType][maxUnitNum]={{1e-3,1e-2,1,1e3,0.0254,0.3048},{1e-3,1,1e3,1e6},{1e-3,1,60,3600},{1e-3,1,1e3}}; 
 class unit{
 	public:
 		unit(){}
@@ -178,27 +180,62 @@ class console{
 	public:
 		console(){}
 		~console(){}
+
 		int startConsole();
 	private:
-		
+		void format(int x){
+			for(int i=0;i<x;++i){
+				cout<<"-";
+			}
+		}
 };
 
 int console::startConsole(){
+	system("clear");
+	cout<<"unit univerter v1.0\n\n";
+	cout<<"now support the follow unit inverter\n";
+	for(int i=0;i<maxUnitType;++i){
+		cout<<unitTypeName[i]<<":";
+		for(int j=0;j<maxUnitNum;++j){
+			if(unitName[i][j].size()==0)break;
+			cout<<"  "<<unitName[i][j];
+		}
+		cout<<"\n";
+	}
+	cout<<"q to quit\n";
 	while(true){
-		//deal with the instruction
+		printf("\n");
+		console::format(50);
+		string A,B;
+		cout<<endl;
+		cout<<"please input the source unit\n";
+		cout<<"format:num+unit (for instance: 17km)\n";
+		cin>>A;
+		if(A=="q"){
+			cout<<"goodbye!\n";
+			break;
+		}
+
+		cout<<"please the destination unit\n";
+		cout<<"format:unit(for instance: m)\n";
+		cin>>B;
+		if(B=="q"){
+			cout<<"goodbye!\n";
+			break;
+		}
+		unitNum C=unitNum(A);
+		int error=C.convertUnit(B);
+		if(error){
+			cout<<"Format Error!\n"<<endl;
+			continue;
+		}
+		cout<<C.showVal()<<C.showUnit()<<endl;
 	}
 	return 0;
 }
 
-
 int main(){
-	string A,B;
-	cin>>A;
-	unitNum C=unitNum(A);
-	cin>>B;
-	unitNum D = unitNum(B);
-	bool E = C == D;
-	cout << E << endl;
+	console a;
+	a.startConsole();
 	return 0;
 }
-
