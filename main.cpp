@@ -191,7 +191,6 @@ class console{
 };
 
 int console::startConsole(){
-	system("clear");
 	cout<<"unit univerter v1.0\n\n";
 	cout<<"now support the follow unit inverter\n";
 	for(int i=0;i<maxUnitType;++i){
@@ -202,34 +201,86 @@ int console::startConsole(){
 		}
 		cout<<"\n";
 	}
-	cout<<"q to quit\n";
+	cout<<"input Q to quit\n";
 	while(true){
 		printf("\n");
-		console::format(50);
+		console::format(40);
 		string A,B;
 		cout<<endl;
-		cout<<"please input the source unit\n";
-		cout<<"format:num+unit (for instance: 17km)\n";
-		cin>>A;
-		if(A=="q"){
-			cout<<"goodbye!\n";
+		cout<<"input U to convert the unit"<<endl;
+		cout<<"input C to calculation"<<endl;
+		string tmp;
+		cin>>tmp;
+		if(tmp=="Q"){
+			cout<<"Goodbye!\n";
 			break;
 		}
-
-		cout<<"please the destination unit\n";
-		cout<<"format:unit(for instance: m)\n";
-		cin>>B;
-		if(B=="q"){
-			cout<<"goodbye!\n";
-			break;
+		while(!(tmp=="U"||tmp=="C")){
+			cout<<"Format Error!Please input again"<<endl;
+			cin >> tmp;
 		}
-		unitNum C=unitNum(A);
-		int error=C.convertUnit(B);
-		if(error){
-			cout<<"Format Error!\n"<<endl;
-			continue;
+		if(tmp=="U"){
+			cout<<"please input the source unit\n";
+			cout<<"format:num+unit (for instance: 17km)\n";
+			cin>>A;
+			if(A=="Q"){
+				cout<<"goodbye!\n";
+				break;
+			}
+			cout<<"please the destination unit\n";
+			cout<<"format:unit(for instance: m)\n";
+			cin>>B;
+			if(B=="Q"){
+				cout<<"Goodbye!\n";
+				break;
+			}
+			unitNum C=unitNum(A);
+			int error=C.convertUnit(B);
+			if(error){
+				cout<<"Format Error!\n"<<endl;
+				continue;
+			}
+			cout<<C.showVal()<<C.showUnit()<<endl;
 		}
-		cout<<C.showVal()<<C.showUnit()<<endl;
+		if(tmp=="C"){
+			cout<<"please input first unit\n";
+			cout<<"format:num+unit (for instance: 17km)\n";
+			cin>>A;
+			if(A=="Q"){
+				cout<<"Goodbye!\n";
+				break;
+			}
+			cout<<"please input operator( + or - )\n";
+			string tmp;
+			cin >> tmp;
+			if(tmp=="Q"){
+				cout<<"Goodbye!\n";
+				break;
+			}
+			while(!(tmp=="+"||tmp=="-")){
+				cout<<"Format Error!Please input again"<<endl;
+				cin >> tmp;
+			}
+			cout<<"please input second unit\n";
+			cout<<"format:num+unit (for instance: 17km)\n";
+			cin>>B;
+			if(B=="Q"){
+				cout<<"Goodbye!\n";
+				break;
+			}
+			unitNum C=unitNum(A);
+			unitNum D=unitNum(B);
+			unitNum T("");
+			if(C.showUnitTypeName()!=D.showUnitTypeName()||
+			!T.parse(A)||!T.parse(B)){
+				cout<<"Format Error!\n"<<endl;
+				continue;
+			}
+			unitNum E("");
+			if(tmp == "+") E = C + D;
+			if(tmp == "-") E = C - D;
+			cout<<E.showVal()<<E.showUnit()<<endl;
+		}
 	}
 	return 0;
 }
