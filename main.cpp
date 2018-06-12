@@ -237,6 +237,7 @@ class mainWin:public QMainWindow{
 			layout->addWidget(edit2,1,2,1,1,Qt::AlignCenter);
 			//add lineedit
 			edit3=new QLineEdit;
+			edit3->setFocusPolicy(Qt::NoFocus);
 			layout->addWidget(edit3,1,4,1,1,Qt::AlignCenter);
 			//add lineedit
 			edit4=new QLineEdit("NewUnit");
