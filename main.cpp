@@ -1,4 +1,13 @@
 #include<bits/stdc++.h>
+#include<QApplication>
+#include<QMainWindow>
+#include<QLayout>
+#include<QLabel>
+#include<QPushButton>
+#include<QWidget>
+#include<QTextCodec>
+#include<QLineEdit>
+#include<QMessageBox>
 
 using namespace std;
 
@@ -176,66 +185,80 @@ unitNum unitNum::operator - (unitNum A){
 	return A;
 }
 
-class console{
-	public:
-		console(){}
-		~console(){}
-
-		int startConsole();
+class mainWin:public QMainWindow{
+	Q_OBJECT
 	private:
-		void format(int x){
-			for(int i=0;i<x;++i){
-				cout<<"-";
-			}
+		QPushButton *button1;
+		QLineEdit *edit1,*edit2,*edit3,*edit4;
+	private slots:  
+		void OnClicked()
+		{
+			string unitNumStr=(edit1->text()+edit2->text()).toStdString();
+			unitNum a=unitNum(unitNumStr);
+			int ret=a.convertUnit(edit4->text().toStdString());
+			if(ret==0)
+				edit3->setText(QString::fromStdString(to_string(a.showVal())));
+			else
+				edit3->setText("Err");
+		}
+	public:
+		mainWin(){
+			this->resize(QSize(600,300));
+			this->setWindowTitle("Unit Converter");
+			QGridLayout *layout=new QGridLayout;
+			layout->setColumnStretch(0,1);
+			layout->setColumnStretch(1,2);
+			layout->setColumnStretch(2,2);
+			layout->setColumnStretch(3,1);
+			layout->setColumnStretch(4,2);
+			layout->setColumnStretch(5,2);
+			layout->setColumnStretch(6,2);
+			layout->setRowStretch(0,1);
+			layout->setRowStretch(1,1);
+			layout->setRowStretch(2,1);
+			layout->setRowStretch(3,1);
+			QWidget *mywidget=new QWidget;
+			mywidget->setLayout(layout);
+			this->setCentralWidget(mywidget);
+			//add button1
+			button1=new QPushButton("转换");
+			layout->addWidget(button1,2,2,1,3);
+			//add label1
+			QLabel *label1= new QLabel("单位转换器");
+			layout->addWidget(label1,0,2,1,3,Qt::AlignCenter);
+			//add label2
+			QLabel *label2= new QLabel("-->");
+			layout->addWidget(label2,1,3,1,1,Qt::AlignCenter);
+			//add lineedit
+			edit1=new QLineEdit;
+			layout->addWidget(edit1,1,1,1,1,Qt::AlignCenter);
+			//add lineedit
+			edit2=new QLineEdit("Unit");
+			layout->addWidget(edit2,1,2,1,1,Qt::AlignCenter);
+			//add lineedit
+			edit3=new QLineEdit;
+			edit3->setFocusPolicy(Qt::NoFocus);
+			layout->addWidget(edit3,1,4,1,1,Qt::AlignCenter);
+			//add lineedit
+			edit4=new QLineEdit("NewUnit");
+			layout->addWidget(edit4,1,5,1,1,Qt::AlignCenter);
+			connect(button1, SIGNAL(clicked()), this, SLOT(OnClicked())); 
 		}
 };
 
-int console::startConsole(){
-	system("clear");
-	cout<<"unit univerter v1.0\n\n";
-	cout<<"now support the follow unit inverter\n";
-	for(int i=0;i<maxUnitType;++i){
-		cout<<unitTypeName[i]<<":";
-		for(int j=0;j<maxUnitNum;++j){
-			if(unitName[i][j].size()==0)break;
-			cout<<"  "<<unitName[i][j];
-		}
-		cout<<"\n";
-	}
-	cout<<"q to quit\n";
-	while(true){
-		printf("\n");
-		console::format(50);
-		string A,B;
-		cout<<endl;
-		cout<<"please input the source unit\n";
-		cout<<"format:num+unit (for instance: 17km)\n";
-		cin>>A;
-		if(A=="q"){
-			cout<<"goodbye!\n";
-			break;
-		}
-
-		cout<<"please the destination unit\n";
-		cout<<"format:unit(for instance: m)\n";
-		cin>>B;
-		if(B=="q"){
-			cout<<"goodbye!\n";
-			break;
-		}
-		unitNum C=unitNum(A);
-		int error=C.convertUnit(B);
-		if(error){
-			cout<<"Format Error!\n"<<endl;
-			continue;
-		}
-		cout<<C.showVal()<<C.showUnit()<<endl;
-	}
+int main(int argc,char *argv[]){
+	//解决中文乱码
+	QTextCodec *codec=QTextCodec::codecForName("utf-8");
+	QTextCodec::setCodecForLocale(codec);
+	QTextCodec::setCodecForCStrings(codec);
+	QTextCodec::setCodecForTr(codec);
+	QApplication app(argc,argv);
+	mainWin *win=new mainWin;
+	win->show();
+	app.exec();
 	return 0;
 }
 
-int main(){
-	console a;
-	a.startConsole();
-	return 0;
-}
+#include"main.moc"
+//因qt导致bug，不能识别cpp文件中的Q_OBJECT宏定义
+//使用MOC生成文件并在最后包含
