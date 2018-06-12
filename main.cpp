@@ -193,9 +193,13 @@ class mainWin:public QMainWindow{
 	private slots:  
 		void OnClicked()
 		{
-			QString str;
-			str = tr("You press button\n")+tr("num1:")+edit1->text()+edit2->text()+tr("\nnum2:")+edit3->text()+edit4->text();
-			QMessageBox::information(this, tr("Information"), str);
+			string unitNumStr=(edit1->text()+edit2->text()).toStdString();
+			unitNum a=unitNum(unitNumStr);
+			int ret=a.convertUnit(edit4->text().toStdString());
+			if(ret==0)
+				edit3->setText(QString::fromStdString(to_string(a.showVal())));
+			else
+				edit3->setText("Err");
 		}
 	public:
 		mainWin(){
