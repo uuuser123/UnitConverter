@@ -185,23 +185,6 @@ unitNum unitNum::operator - (unitNum A){
 	return A;
 }
 
-class PushBtn:public QPushButton  {  
-	Q_OBJECT
-	public:
-		PushBtn(QWidget *parent = NULL):QPushButton(parent)  
-		{
-			connect(this, SIGNAL(clicked()), this, SLOT(OnClicked())); 
-			this->setText("123") ;
-		}
-	private slots:  
-		void OnClicked()
-		{
-			QString str;
-			str = "You press " + this->text();
-			QMessageBox::information(this, tr("Information"), str);
-		}
-};
-
 class mainWin:public QMainWindow{
 	Q_OBJECT
 	private:
@@ -211,7 +194,7 @@ class mainWin:public QMainWindow{
 		void OnClicked()
 		{
 			QString str;
-			str = tr("You press button\n")+tr("num1:")+edit1->text()+tr("\nnum2:")+edit3->text();
+			str = tr("You press button\n")+tr("num1:")+edit1->text()+edit2->text()+tr("\nnum2:")+edit3->text()+edit4->text();
 			QMessageBox::information(this, tr("Information"), str);
 		}
 	public:
