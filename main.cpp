@@ -1,7 +1,12 @@
 #include<bits/stdc++.h>
-#include<qapplication.h>
-#include<qmainwindow.h>
-#include<qlabel.h>
+#include<QApplication>
+#include<QMainWindow>
+#include<QLayout>
+#include<QLabel>
+#include<QPushButton>
+#include<QWidget>
+#include<QTextCodec>
+#include<QLineEdit>
 
 using namespace std;
 
@@ -179,15 +184,60 @@ unitNum unitNum::operator - (unitNum A){
 	return A;
 }
 
+class mainWin:public QMainWindow{
+	public:
+		mainWin(){
+			this->resize(QSize(600,300));
+			this->setWindowTitle("Unit Converter");
+			QGridLayout *layout=new QGridLayout;
+			layout->setColumnStretch(0,1);
+			layout->setColumnStretch(1,2);
+			layout->setColumnStretch(2,2);
+			layout->setColumnStretch(3,1);
+			layout->setColumnStretch(4,2);
+			layout->setColumnStretch(5,2);
+			layout->setColumnStretch(6,2);
+			layout->setRowStretch(0,1);
+			layout->setRowStretch(1,1);
+			layout->setRowStretch(2,1);
+			layout->setRowStretch(3,1);
+			QWidget *mywidget=new QWidget;
+			mywidget->setLayout(layout);
+			this->setCentralWidget(mywidget);
+			//add button1
+			QPushButton *button1=new QPushButton("转换");
+			layout->addWidget(button1,2,2,1,3);
+			//add label1
+			QLabel *label1= new QLabel("单位转换器");
+			layout->addWidget(label1,0,2,1,3,Qt::AlignCenter);
+			//add label2
+			QLabel *label2= new QLabel("-->");
+			layout->addWidget(label2,1,3,1,1,Qt::AlignCenter);
+			//add lineedit
+			QLineEdit *edit1=new QLineEdit;
+			layout->addWidget(edit1,1,1,1,1,Qt::AlignCenter);
+			//add lineedit
+			QLineEdit *edit2=new QLineEdit("Unit");
+			layout->addWidget(edit2,1,2,1,1,Qt::AlignCenter);
+			//add lineedit
+			QLineEdit *edit3=new QLineEdit;
+			layout->addWidget(edit3,1,4,1,1,Qt::AlignCenter);
+			//add lineedit
+			QLineEdit *edit4=new QLineEdit("NewUnit");
+			layout->addWidget(edit4,1,5,1,1,Qt::AlignCenter);
+		}
+};
+
 int main(int argc,char *argv[]){
+	//解决中文乱码
+	QTextCodec *codec=QTextCodec::codecForName("utf-8");
+	QTextCodec::setCodecForLocale(codec);
+	QTextCodec::setCodecForCStrings(codec);
+	QTextCodec::setCodecForTr(codec);
 	QApplication app(argc,argv);
-	/*QLabel *label=new QLabel("Hello Qt!\n",0);
-	label->resize(100,30);
-	label->show();*/
-	QMainWindow *w=new QMainWindow;
-	w->resize(QSize(600,300));
-	w->setWindowTitle("Unit Converter");
-	w->show();
+	mainWin *win=new mainWin;
+	win->show();
 	app.exec();
 	return 0;
 }
+
