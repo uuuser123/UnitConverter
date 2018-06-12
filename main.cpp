@@ -204,11 +204,14 @@ class PushBtn:public QPushButton  {
 
 class mainWin:public QMainWindow{
 	Q_OBJECT
+	private:
+		QPushButton *button1;
+		QLineEdit *edit1,*edit2,*edit3,*edit4;
 	private slots:  
 		void OnClicked()
 		{
 			QString str;
-			str = "You press ";
+			str = tr("You press button\n")+tr("num1:")+edit1->text()+tr("\nnum2:")+edit3->text();
 			QMessageBox::information(this, tr("Information"), str);
 		}
 	public:
@@ -231,7 +234,7 @@ class mainWin:public QMainWindow{
 			mywidget->setLayout(layout);
 			this->setCentralWidget(mywidget);
 			//add button1
-			QPushButton *button1=new QPushButton("转换");
+			button1=new QPushButton("转换");
 			layout->addWidget(button1,2,2,1,3);
 			//add label1
 			QLabel *label1= new QLabel("单位转换器");
@@ -240,16 +243,16 @@ class mainWin:public QMainWindow{
 			QLabel *label2= new QLabel("-->");
 			layout->addWidget(label2,1,3,1,1,Qt::AlignCenter);
 			//add lineedit
-			QLineEdit *edit1=new QLineEdit;
+			edit1=new QLineEdit;
 			layout->addWidget(edit1,1,1,1,1,Qt::AlignCenter);
 			//add lineedit
-			QLineEdit *edit2=new QLineEdit("Unit");
+			edit2=new QLineEdit("Unit");
 			layout->addWidget(edit2,1,2,1,1,Qt::AlignCenter);
 			//add lineedit
-			QLineEdit *edit3=new QLineEdit;
+			edit3=new QLineEdit;
 			layout->addWidget(edit3,1,4,1,1,Qt::AlignCenter);
 			//add lineedit
-			QLineEdit *edit4=new QLineEdit("NewUnit");
+			edit4=new QLineEdit("NewUnit");
 			layout->addWidget(edit4,1,5,1,1,Qt::AlignCenter);
 			connect(button1, SIGNAL(clicked()), this, SLOT(OnClicked())); 
 		}
