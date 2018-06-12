@@ -7,6 +7,7 @@
 #include<QWidget>
 #include<QTextCodec>
 #include<QLineEdit>
+#include<QMessageBox>
 
 using namespace std;
 
@@ -184,7 +185,32 @@ unitNum unitNum::operator - (unitNum A){
 	return A;
 }
 
+class PushBtn:public QPushButton  {  
+	Q_OBJECT
+	public:
+		PushBtn(QWidget *parent = NULL):QPushButton(parent)  
+		{
+			connect(this, SIGNAL(clicked()), this, SLOT(OnClicked())); 
+			this->setText("123") ;
+		}
+	private slots:  
+		void OnClicked()
+		{
+			QString str;
+			str = "You press " + this->text();
+			QMessageBox::information(this, tr("Information"), str);
+		}
+};
+
 class mainWin:public QMainWindow{
+	Q_OBJECT
+	private slots:  
+		void OnClicked()
+		{
+			QString str;
+			str = "You press ";
+			QMessageBox::information(this, tr("Information"), str);
+		}
 	public:
 		mainWin(){
 			this->resize(QSize(600,300));
@@ -225,6 +251,7 @@ class mainWin:public QMainWindow{
 			//add lineedit
 			QLineEdit *edit4=new QLineEdit("NewUnit");
 			layout->addWidget(edit4,1,5,1,1,Qt::AlignCenter);
+			connect(button1, SIGNAL(clicked()), this, SLOT(OnClicked())); 
 		}
 };
 
@@ -241,3 +268,6 @@ int main(int argc,char *argv[]){
 	return 0;
 }
 
+#include"main.moc"
+//因qt导致bug，不能识别cpp文件中的Q_OBJECT宏定义
+//使用MOC生成文件并在最后包含
