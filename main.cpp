@@ -189,17 +189,44 @@ class mainWin:public QMainWindow{
 	Q_OBJECT
 	private:
 		QPushButton *button1;
-		QLineEdit *edit1,*edit2,*edit3,*edit4;
+		QPushButton *button2;
+		QLineEdit *edit1,*edit2,*edit3,*edit4,*edit_syl,*edit_ans,*edit_unit;
 	private slots:  
 		void OnClicked()
 		{
 			string unitNumStr=(edit1->text()+edit2->text()).toStdString();
 			unitNum a=unitNum(unitNumStr);
 			int ret=a.convertUnit(edit4->text().toStdString());
-			if(ret==0)
-				edit3->setText(QString::fromStdString(to_string(a.showVal())));
+			if(ret==0){
+				edit_ans->setText(QString::fromStdString(to_string(a.showVal())));
+				edit_unit->setText(QString::fromStdString(a.showUnit()));
+			}
 			else
-				edit3->setText("Err");
+				edit_ans->setText("Err");
+		}
+		void Cal(){
+			string unitNumStr1=(edit1->text()+edit2->text()).toStdString();
+			string unitNumStr2=(edit3->text()+edit4->text()).toStdString();
+			unitNum a=unitNum(unitNumStr1);
+			unitNum b=unitNum(unitNumStr2);
+			unitNum c = a+b;
+			unitNum d = a-b;
+			string syl=(edit_syl->text().toStdString());
+			if(a.showUnitTypeName()!=b.showUnitTypeName()){
+				edit_ans->setText("Err");		
+			}
+			else{
+				if(syl[0]=='+'){
+					edit_ans->setText(QString::fromStdString(to_string(c.showVal())));
+					edit_unit->setText(QString::fromStdString(c.showUnit()));
+				}
+				else if(syl[0]=='-'){
+					edit_ans->setText(QString::fromStdString(to_string(d.showVal())));
+					edit_unit->setText(QString::fromStdString(d.showUnit()));
+				}
+				else
+					edit_ans->setText("Err");
+			}
 		}
 	public:
 		mainWin(){
@@ -220,9 +247,11 @@ class mainWin:public QMainWindow{
 			QWidget *mywidget=new QWidget;
 			mywidget->setLayout(layout);
 			this->setCentralWidget(mywidget);
-			//add button1
+			//add button1&button2
 			button1=new QPushButton("转换");
+			button2=new QPushButton("计算");
 			layout->addWidget(button1,2,2,1,3);
+			layout->addWidget(button2,3,2,1,3);
 			//add label1
 			QLabel *label1= new QLabel("单位转换器");
 			layout->addWidget(label1,0,2,1,3,Qt::AlignCenter);
@@ -237,12 +266,20 @@ class mainWin:public QMainWindow{
 			layout->addWidget(edit2,1,2,1,1,Qt::AlignCenter);
 			//add lineedit
 			edit3=new QLineEdit;
-			edit3->setFocusPolicy(Qt::NoFocus);
 			layout->addWidget(edit3,1,4,1,1,Qt::AlignCenter);
 			//add lineedit
-			edit4=new QLineEdit("NewUnit");
+			edit4=new QLineEdit("Unit");	
 			layout->addWidget(edit4,1,5,1,1,Qt::AlignCenter);
+			edit_syl=new QLineEdit("+ or -");
+			layout->addWidget(edit_syl,3,1,1,1,Qt::AlignCenter);
+			edit_ans=new QLineEdit;
+			edit_ans->setFocusPolicy(Qt::NoFocus);
+			layout->addWidget(edit_ans,3,5,1,1,Qt::AlignCenter);
+			edit_unit=new QLineEdit;
+			edit_unit->setFocusPolicy(Qt::NoFocus);
+			layout->addWidget(edit_unit,3,6,1,1,Qt::AlignCenter);
 			connect(button1, SIGNAL(clicked()), this, SLOT(OnClicked())); 
+			connect(button2, SIGNAL(clicked()), this, SLOT(Cal())); 
 		}
 };
 
