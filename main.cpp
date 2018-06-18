@@ -11,13 +11,11 @@
 
 using namespace std;
 
-const int maxUnitNum=100,maxUnitType=4;
-/*string unitTypeName[maxUnitType]={"length","mass","time","electric current","thermodynamic temperature","amount of substance","luminous intensity"};
-*/
-string unitTypeName[maxUnitType]={"length","mass","time","electric current"};
-string unitName[maxUnitType][maxUnitNum]={{"mm","cm","m","km","inch","feet"},{"mg","g","kg","t"},{"ms","s","min","h"},{"mA","A","kA"}};
+const int maxUnitNum=100,maxUnitType=5;
+string unitTypeName[maxUnitType]={"","length","mass","time","electric current"};
+string unitName[maxUnitType][maxUnitNum]={{},{"mm","cm","m","km","inch","feet"},{"mg","g","kg","t"},{"ms","s","min","h"},{"mA","A","kA"}};
 
-double coefficient[maxUnitType][maxUnitNum]={{1e-3,1e-2,1,1e3,0.0254,0.3048},{1e-3,1,1e3,1e6},{1e-3,1,60,3600},{1e-3,1,1e3}}; 
+double coefficient[maxUnitType][maxUnitNum]={{},{1e-3,1e-2,1,1e3,0.0254,0.3048},{1e-3,1,1e3,1e6},{1e-3,1,60,3600},{1e-3,1,1e3}}; 
 class unit{
 	public:
 		unit(){}
@@ -55,7 +53,7 @@ double unit::convert(string newUnit)
 
 int unit::set(string newUnit)
 {
-	for(int i=0;i<maxUnitType;i++)
+	for(int i=1;i<maxUnitType;i++)
 	{
 		for(int j=0;j<maxUnitNum;j++)
 		{
@@ -67,6 +65,7 @@ int unit::set(string newUnit)
 			}
 		}
 	}
+	unitType=0;
 	return 1;
 }
 
