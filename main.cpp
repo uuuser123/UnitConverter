@@ -12,8 +12,8 @@
 using namespace std;
 
 const int maxUnitNum=100,maxUnitType=8;
-string unitTypeName[maxUnitType]={"","length","area","volume","mass","time","current","pressure"};
-string unitName[maxUnitType][maxUnitNum]={{},{"mm","cm","m","km","inch","feet"},{"mm^2","cm^2","m^2","km^2"},{"mm^3","mL","L","m^3"},{"mg","g","kg","t"},{"ms","s","min","h"},{"mA","A","kA"},{"atm","Pa","hPa","kPa"}};
+string unitTypeName[maxUnitType]={"Err","length","area","volume","mass","time","current","pressure"};
+string unitName[maxUnitType][maxUnitNum]={{"Err"},{"mm","cm","m","km","inch","feet"},{"mm^2","cm^2","m^2","km^2"},{"mm^3","mL","L","m^3"},{"mg","g","kg","t"},{"ms","s","min","h"},{"mA","A","kA"},{"atm","Pa","hPa","kPa"}};
 
 double coefficient[maxUnitType][maxUnitNum]={{},{1e-3,1e-2,1,1e3,0.0254,0.3048},{1e-6,1e-4,1,1e6},{1e-3,1,1e3,1e6},{1e-3,1,1e3,1e6},{1e-3,1,60,3600},{1e-3,1,1e3},{98692327*1e-13,1,1e2,1e3}}; 
 class unit{
@@ -66,6 +66,7 @@ int unit::set(string newUnit)
 		}
 	}
 	unitType=0;
+	unitId=0;
 	return 1;
 }
 
@@ -93,8 +94,6 @@ class unitNum:public unit{
 		bool operator >= (unitNum A);
 		unitNum operator + (unitNum A);
 		unitNum operator - (unitNum A);
-		unitNum operator * (unitNum A);
-		unitNum operator / (unitNum A);
 	private:
 		double val;
 };
