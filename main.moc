@@ -30,13 +30,13 @@ static const uint qt_meta_data_mainWin[] = {
 
  // slots: signature, parameters, type, tag, flags
        9,    8,    8,    8, 0x08,
-      21,    8,    8,    8, 0x08,
+      23,    8,   19,    8, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_mainWin[] = {
-    "mainWin\0\0OnClicked()\0Cal()\0"
+    "mainWin\0\0convert()\0int\0calculate()\0"
 };
 
 void mainWin::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -45,12 +45,12 @@ void mainWin::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         Q_ASSERT(staticMetaObject.cast(_o));
         mainWin *_t = static_cast<mainWin *>(_o);
         switch (_id) {
-        case 0: _t->OnClicked(); break;
-        case 1: _t->Cal(); break;
+        case 0: _t->convert(); break;
+        case 1: { int _r = _t->calculate();
+            if (_a[0]) *reinterpret_cast< int*>(_a[0]) = _r; }  break;
         default: ;
         }
     }
-    Q_UNUSED(_a);
 }
 
 const QMetaObjectExtraData mainWin::staticMetaObjectExtraData = {

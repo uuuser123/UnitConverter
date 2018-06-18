@@ -192,7 +192,7 @@ class mainWin:public QMainWindow{
 		QPushButton *button2;
 		QLineEdit *edit1,*edit2,*edit3,*edit4,*edit5,*edit6;
 	private slots:  
-		void OnClicked()
+		void convert()
 		{
 			string unitNumStr=(edit1->text()+edit2->text()).toStdString();
 			unitNum a=unitNum(unitNumStr);
@@ -202,34 +202,39 @@ class mainWin:public QMainWindow{
 			else
 				edit3->setText("Err");
 		}
-		void calculate(){
-			string expression=(edit5->text.toStdString());
-			for(int i=0;i<expression.length();i++)
+		int calculate(){
+			string expression=(edit5->text()).toStdString()+"$";
+//			cout<<expression<<endl;
+			int lastPos=0;
+			unitNum ans=unitNum("");
+			bool first=true;
+			for(int i=0;i<(int)expression.length();i++)
 			{
-				
+				if(expression[i]=='+' || expression[i]=='-' || expression[i]=='$')
+				{
+//					printf("%c\n",expression[i]);
+					if(first){
+						ans=unitNum(expression.substr(0,i));
+						lastPos=i;
+						first=false;
+						continue;
+					}
+					unitNum tmp=unitNum(expression.substr(lastPos+1,i-lastPos-1));
+					if(tmp.showUnitTypeName()!=ans.showUnitTypeName()){
+						edit6->setText("Err");
+						return 0;
+					}
+					if(expression[lastPos]=='+'){
+						ans=ans+tmp;
+					}
+					else if(expression[lastPos]=='-'){
+						ans=ans-tmp;
+					}
+					lastPos=i;
+				}
 			}
-//			string unitNumStr1=(edit1->text()+edit2->text()).toStdString();
-//			string unitNumStr2=(edit3->text()+edit4->text()).toStdString();
-//			unitNum a=unitNum(unitNumStr1);
-//			unitNum b=unitNum(unitNumStr2);
-//			unitNum c = a+b;
-//			unitNum d = a-b;
-//			string syl=(edit_syl->text().toStdString());
-//			if(a.showUnitTypeName()!=b.showUnitTypeName()){
-//				edit_ans->setText("Err");		
-//			}
-//			else{
-//				if(syl[0]=='+'){
-//					edit_ans->setText(QString::fromStdString(to_string(c.showVal())));
-//					edit_unit->setText(QString::fromStdString(c.showUnit()));
-//				}
-//				else if(syl[0]=='-'){
-//					edit_ans->setText(QString::fromStdString(to_string(d.showVal())));
-//					edit_unit->setText(QString::fromStdString(d.showUnit()));
-//				}
-//				else
-//					edit_ans->setText("Err");
-//			}
+			edit6->setText(QString::fromStdString(to_string(ans.showVal())+ans.showUnit()));
+			return 0;
 		}
 	public:
 		mainWin(){
@@ -244,7 +249,7 @@ class mainWin:public QMainWindow{
 			mywidget->setLayout(layout);
 			this->setCentralWidget(mywidget);
 			//add button1&button2
-			button1=new QPushButton("转换");
+			button1=new QPushButton("-->");
 			button2=new QPushButton("=");
 			layout->addWidget(button1,1,3,1,1);
 			layout->addWidget(button2,3,4,1,1);
@@ -258,16 +263,18 @@ class mainWin:public QMainWindow{
 			edit2=new QLineEdit("Unit");
 			layout->addWidget(edit2,1,2,1,1,Qt::AlignCenter);
 			//add lineedit
-			edit3=new QLineEdit("e.g. 1km+2m");
+			edit3=new QLineEdit();
 			layout->addWidget(edit3,1,4,1,1,Qt::AlignCenter);
 			//add lineedit
 			edit4=new QLineEdit("NewUnit");	
 			layout->addWidget(edit4,1,5,1,1,Qt::AlignCenter);
-			edit5=new QLineEdit;
+			edit5=new QLineEdit("e.g. 1km+3m");
 			layout->addWidget(edit5,3,1,1,3);
 			edit6=new QLineEdit("Ans & Unit");
 			layout->addWidget(edit6,3,5,1,2);
-			connect(button1, SIGNAL(clicked()), this, SLOT(OnClicked())); 
+			edit6->setFocusPolicy(Qt::NoFocus);
+			edit3->setFocusPolicy(Qt::NoFocus);
+			connect(button1, SIGNAL(clicked()), this, SLOT(convert())); 
 			connect(button2, SIGNAL(clicked()), this, SLOT(calculate())); 
 		}
 };
