@@ -265,12 +265,12 @@ class mainWin:public QMainWindow{
 			button3=new QPushButton("Press");
 			layout->addWidget(button1,1,3,1,1);
 			layout->addWidget(button2,3,4,1,1);
-			layout->addWidget(button3,5,3,1,1);
+			layout->addWidget(button3,5,4,1,1);
 			//add label1
 			QLabel *label1= new QLabel("单位转换器");
 			layout->addWidget(label1,0,2,1,4,Qt::AlignCenter);
 			QLabel *labelt= new QLabel("Show All Available Units");
-			layout->addWidget(labelt,5,2,1,1,Qt::AlignCenter);
+			layout->addWidget(labelt,5,1,1,3);
 			//add lineedit
 			edit1=new QLineEdit;
 			layout->addWidget(edit1,1,1,1,1);
