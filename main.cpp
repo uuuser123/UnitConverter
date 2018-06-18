@@ -53,6 +53,7 @@ double unit::convert(string newUnit)
 
 int unit::set(string newUnit)
 {
+//	printf("debug\n");
 	for(int i=1;i<maxUnitType;i++)
 	{
 		for(int j=0;j<maxUnitNum;j++)
@@ -143,6 +144,7 @@ int unitNum::parse(string unitNumStr){
 			d_cnt++;
 		}
 	}
+	set("Err");
 	return 0;
 }
 
