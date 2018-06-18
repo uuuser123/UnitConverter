@@ -11,11 +11,11 @@
 
 using namespace std;
 
-const int maxUnitNum=100,maxUnitType=5;
-string unitTypeName[maxUnitType]={"","length","mass","time","electric current"};
-string unitName[maxUnitType][maxUnitNum]={{},{"mm","cm","m","km","inch","feet"},{"mg","g","kg","t"},{"ms","s","min","h"},{"mA","A","kA"}};
+const int maxUnitNum=100,maxUnitType=8;
+string unitTypeName[maxUnitType]={"","length","area","volume","mass","time","current","pressure"};
+string unitName[maxUnitType][maxUnitNum]={{},{"mm","cm","m","km","inch","feet"},{"mm^2","cm^2","m^2","km^2"},{"mm^3","mL","L","m^3"},{"mg","g","kg","t"},{"ms","s","min","h"},{"mA","A","kA"},{"atm","Pa","hPa","kPa"}};
 
-double coefficient[maxUnitType][maxUnitNum]={{},{1e-3,1e-2,1,1e3,0.0254,0.3048},{1e-3,1,1e3,1e6},{1e-3,1,60,3600},{1e-3,1,1e3}}; 
+double coefficient[maxUnitType][maxUnitNum]={{},{1e-3,1e-2,1,1e3,0.0254,0.3048},{1e-6,1e-4,1,1e6},{1e-3,1,1e3,1e6},{1e-3,1,1e3,1e6},{1e-3,1,60,3600},{1e-3,1,1e3},{98692327*1e-13,1,1e2,1e3}}; 
 class unit{
 	public:
 		unit(){}
@@ -189,10 +189,10 @@ class mainWin:public QMainWindow{
 	private:
 		QPushButton *button1;
 		QPushButton *button2;
+		QPushButton *button3;
 		QLineEdit *edit1,*edit2,*edit3,*edit4,*edit5,*edit6;
 	private slots:  
-		void convert()
-		{
+		void convert(){
 			string unitNumStr=(edit1->text()+edit2->text()).toStdString();
 			unitNum a=unitNum(unitNumStr);
 			int ret=a.convertUnit(edit4->text().toStdString());
@@ -203,7 +203,6 @@ class mainWin:public QMainWindow{
 		}
 		int calculate(){
 			string expression=(edit5->text()).toStdString()+"$";
-//			cout<<expression<<endl;
 			int lastPos=0;
 			unitNum ans=unitNum("");
 			bool first=true;
@@ -211,7 +210,6 @@ class mainWin:public QMainWindow{
 			{
 				if(expression[i]=='+' || expression[i]=='-' || expression[i]=='$')
 				{
-//					printf("%c\n",expression[i]);
 					if(first){
 						ans=unitNum(expression.substr(0,i));
 						lastPos=i;
@@ -235,6 +233,20 @@ class mainWin:public QMainWindow{
 			edit6->setText(QString::fromStdString(to_string(ans.showVal())+ans.showUnit()));
 			return 0;
 		}
+		void unitMenu(){
+			string totstr;
+			for(int i = 1;i < maxUnitType;i++){
+				totstr+=unitTypeName[i];
+				totstr+=":\t";
+				int ct = 0;
+				while(unitName[i][ct]!=""){
+					totstr+=' ';
+					totstr+=unitName[i][ct++];				
+				}
+				totstr+="\n";
+			}
+			QMessageBox::information(NULL, "All Units", QString::fromStdString(totstr), "confirm");
+		}
 	public:
 		mainWin(){
 			this->resize(QSize(600,300));
@@ -250,23 +262,27 @@ class mainWin:public QMainWindow{
 			//add button1&button2
 			button1=new QPushButton("-->");
 			button2=new QPushButton("=");
+			button3=new QPushButton("Press");
 			layout->addWidget(button1,1,3,1,1);
 			layout->addWidget(button2,3,4,1,1);
+			layout->addWidget(button3,5,3,1,1);
 			//add label1
 			QLabel *label1= new QLabel("单位转换器");
 			layout->addWidget(label1,0,2,1,4,Qt::AlignCenter);
+			QLabel *labelt= new QLabel("Show All Available Units");
+			layout->addWidget(labelt,5,2,1,1,Qt::AlignCenter);
 			//add lineedit
 			edit1=new QLineEdit;
-			layout->addWidget(edit1,1,1,1,1,Qt::AlignCenter);
+			layout->addWidget(edit1,1,1,1,1);
 			//add lineedit
 			edit2=new QLineEdit("Unit");
-			layout->addWidget(edit2,1,2,1,1,Qt::AlignCenter);
+			layout->addWidget(edit2,1,2,1,1);
 			//add lineedit
 			edit3=new QLineEdit();
-			layout->addWidget(edit3,1,4,1,1,Qt::AlignCenter);
+			layout->addWidget(edit3,1,4,1,1);
 			//add lineedit
 			edit4=new QLineEdit("NewUnit");	
-			layout->addWidget(edit4,1,5,1,1,Qt::AlignCenter);
+			layout->addWidget(edit4,1,5,1,2);
 			edit5=new QLineEdit("e.g. 1km+3m");
 			layout->addWidget(edit5,3,1,1,3);
 			edit6=new QLineEdit("Ans & Unit");
@@ -275,11 +291,11 @@ class mainWin:public QMainWindow{
 			edit3->setFocusPolicy(Qt::NoFocus);
 			connect(button1, SIGNAL(clicked()), this, SLOT(convert())); 
 			connect(button2, SIGNAL(clicked()), this, SLOT(calculate())); 
-		}
+			connect(button3, SIGNAL(clicked()), this, SLOT(unitMenu())); 
+		} 
 };
 
 int main(int argc,char *argv[]){
-	//解决中文乱码
 	QTextCodec *codec=QTextCodec::codecForName("utf-8");
 	QTextCodec::setCodecForLocale(codec);
 	QTextCodec::setCodecForCStrings(codec);
@@ -292,5 +308,4 @@ int main(int argc,char *argv[]){
 }
 
 #include"main.moc"
-//因qt导致bug，不能识别cpp文件中的Q_OBJECT宏定义
-//使用MOC生成文件并在最后包含
+
