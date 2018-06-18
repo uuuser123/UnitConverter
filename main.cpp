@@ -296,6 +296,7 @@ class mainWin:public QMainWindow{
 };
 
 int main(int argc,char *argv[]){
+	//解决中文乱码
 	QTextCodec *codec=QTextCodec::codecForName("utf-8");
 	QTextCodec::setCodecForLocale(codec);
 	QTextCodec::setCodecForCStrings(codec);
@@ -308,4 +309,6 @@ int main(int argc,char *argv[]){
 }
 
 #include"main.moc"
+//因qt导致bug，不能识别cpp文件中的Q_OBJECT宏定义
+//使用MOC生成文件并在最后包含
 
