@@ -202,7 +202,7 @@ class mainWin:public QMainWindow{
 		}
 		int calculate(){
 			string expression=(edit5->text()).toStdString()+"$";
-			int lastPos=0;
+			int lastPos=-1;
 			unitNum ans=unitNum("");
 			bool first=true;
 			for(int i=0;i<(int)expression.length();i++)
@@ -215,10 +215,14 @@ class mainWin:public QMainWindow{
 						first=false;
 						continue;
 					}
+					if(i-lastPos-1==0){
+						edit6->setText("Err");
+						return 1;
+					}
 					unitNum tmp=unitNum(expression.substr(lastPos+1,i-lastPos-1));
 					if(tmp.showUnitTypeName()!=ans.showUnitTypeName()){
 						edit6->setText("Err");
-						return 0;
+						return 1;
 					}
 					if(expression[lastPos]=='+'){
 						ans=ans+tmp;
