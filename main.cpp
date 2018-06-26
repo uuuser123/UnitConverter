@@ -11,13 +11,11 @@
 
 using namespace std;
 
-const int maxUnitNum=100,maxUnitType=4;
-/*string unitTypeName[maxUnitType]={"length","mass","time","electric current","thermodynamic temperature","amount of substance","luminous intensity"};
-*/
-string unitTypeName[maxUnitType]={"length","mass","time","electric current"};
-string unitName[maxUnitType][maxUnitNum]={{"mm","cm","m","km","inch","feet"},{"mg","g","kg","t"},{"ms","s","min","h"},{"mA","A","kA"}};
+const int maxUnitNum=100,maxUnitType=8;
+string unitTypeName[maxUnitType]={"Err","length","area","volume","mass","time","current","pressure"};
+string unitName[maxUnitType][maxUnitNum]={{"Err"},{"mm","cm","m","km","inch","feet"},{"mm^2","cm^2","m^2","km^2"},{"mm^3","mL","L","m^3"},{"mg","g","kg","t"},{"ms","s","min","h"},{"mA","A","kA"},{"atm","Pa","hPa","kPa"}};
 
-double coefficient[maxUnitType][maxUnitNum]={{1e-3,1e-2,1,1e3,0.0254,0.3048},{1e-3,1,1e3,1e6},{1e-3,1,60,3600},{1e-3,1,1e3}}; 
+double coefficient[maxUnitType][maxUnitNum]={{},{1e-3,1e-2,1,1e3,0.0254,0.3048},{1e-6,1e-4,1,1e6},{1e-3,1,1e3,1e6},{1e-3,1,1e3,1e6},{1e-3,1,60,3600},{1e-3,1,1e3},{98692327*1e-13,1,1e2,1e3}}; 
 class unit{
 	public:
 		unit(){}
@@ -55,7 +53,8 @@ double unit::convert(string newUnit)
 
 int unit::set(string newUnit)
 {
-	for(int i=0;i<maxUnitType;i++)
+//	printf("debug\n");
+	for(int i=1;i<maxUnitType;i++)
 	{
 		for(int j=0;j<maxUnitNum;j++)
 		{
@@ -67,6 +66,8 @@ int unit::set(string newUnit)
 			}
 		}
 	}
+	unitType=0;
+	unitId=0;
 	return 1;
 }
 
@@ -94,8 +95,6 @@ class unitNum:public unit{
 		bool operator >= (unitNum A);
 		unitNum operator + (unitNum A);
 		unitNum operator - (unitNum A);
-		unitNum operator * (unitNum A);
-		unitNum operator / (unitNum A);
 	private:
 		double val;
 };
@@ -145,6 +144,7 @@ int unitNum::parse(string unitNumStr){
 			d_cnt++;
 		}
 	}
+	set("Err");
 	return 0;
 }
 
@@ -189,10 +189,11 @@ class mainWin:public QMainWindow{
 	Q_OBJECT
 	private:
 		QPushButton *button1;
-		QLineEdit *edit1,*edit2,*edit3,*edit4;
+		QPushButton *button2;
+		QPushButton *button3;
+		QLineEdit *edit1,*edit2,*edit3,*edit4,*edit5,*edit6;
 	private slots:  
-		void OnClicked()
-		{
+		void convert(){
 			string unitNumStr=(edit1->text()+edit2->text()).toStdString();
 			unitNum a=unitNum(unitNumStr);
 			int ret=a.convertUnit(edit4->text().toStdString());
@@ -201,49 +202,108 @@ class mainWin:public QMainWindow{
 			else
 				edit3->setText("Err");
 		}
+		int calculate()
+		{
+			string expression=(edit5->text()).toStdString()+"$";
+			int last=-1;
+			unitNum res=unitNum("");
+			int first=1;
+			for(int i=0;i<(int)expression.length();i++)
+			{
+				if(expression[i]=='+' || expression[i]=='-' || expression[i]=='$')
+				{
+					if(first)
+					{
+						res=unitNum(expression.substr(0,i));
+						last=i;
+						first=0;
+						continue;
+					}
+					if(i-last-1==0)
+					{
+						edit6->setText("Err");
+						return 1;
+					}
+					unitNum temp=unitNum(expression.substr(last+1,i-last-1));
+					if(temp.showUnitTypeName()!=ans.showUnitTypeName())
+					{
+						edit6->setText("Err");
+						return 1;
+					}
+					if(expression[last]=='+')
+					{
+						res=ans+temp;
+					}
+					else if(expression[last]=='-')
+					{
+						res=res-temp;
+					}
+					last=i;
+				}
+			}
+			edit6->setText(QString::fromStdString(to_string(ans.showVal())+ans.showUnit()));
+			return 0;
+		}
+		void unitMenu(){
+			string totstr;
+			for(int i = 1;i < maxUnitType;i++){
+				totstr+=unitTypeName[i];
+				totstr+=":\t";
+				int ct = 0;
+				while(unitName[i][ct]!=""){
+					totstr+=' ';
+					totstr+=unitName[i][ct++];				
+				}
+				totstr+="\n";
+			}
+			QMessageBox::information(NULL, "All Units", QString::fromStdString(totstr), "confirm");
+		}
 	public:
 		mainWin(){
 			this->resize(QSize(600,300));
 			this->setWindowTitle("Unit Converter");
 			QGridLayout *layout=new QGridLayout;
-			layout->setColumnStretch(0,1);
-			layout->setColumnStretch(1,2);
-			layout->setColumnStretch(2,2);
-			layout->setColumnStretch(3,1);
-			layout->setColumnStretch(4,2);
-			layout->setColumnStretch(5,2);
-			layout->setColumnStretch(6,2);
-			layout->setRowStretch(0,1);
-			layout->setRowStretch(1,1);
-			layout->setRowStretch(2,1);
-			layout->setRowStretch(3,1);
+			for(int i=0;i<8;i++)
+				layout->setColumnStretch(i,1);
+			for(int i=0;i<5;i++)
+				layout->setRowStretch(i,1);
 			QWidget *mywidget=new QWidget;
 			mywidget->setLayout(layout);
 			this->setCentralWidget(mywidget);
-			//add button1
-			button1=new QPushButton("转换");
-			layout->addWidget(button1,2,2,1,3);
+			//add button1&button2
+			button1=new QPushButton("-->");
+			button2=new QPushButton("=");
+			button3=new QPushButton("Press");
+			layout->addWidget(button1,1,3,1,1);
+			layout->addWidget(button2,3,4,1,1);
+			layout->addWidget(button3,5,4,1,1);
 			//add label1
 			QLabel *label1= new QLabel("单位转换器");
-			layout->addWidget(label1,0,2,1,3,Qt::AlignCenter);
-			//add label2
-			QLabel *label2= new QLabel("-->");
-			layout->addWidget(label2,1,3,1,1,Qt::AlignCenter);
+			layout->addWidget(label1,0,2,1,4,Qt::AlignCenter);
+			QLabel *labelt= new QLabel("Show All Available Units");
+			layout->addWidget(labelt,5,1,1,3);
 			//add lineedit
 			edit1=new QLineEdit;
-			layout->addWidget(edit1,1,1,1,1,Qt::AlignCenter);
+			layout->addWidget(edit1,1,1,1,1);
 			//add lineedit
 			edit2=new QLineEdit("Unit");
-			layout->addWidget(edit2,1,2,1,1,Qt::AlignCenter);
+			layout->addWidget(edit2,1,2,1,1);
 			//add lineedit
-			edit3=new QLineEdit;
+			edit3=new QLineEdit();
+			layout->addWidget(edit3,1,4,1,1);
+			//add lineedit
+			edit4=new QLineEdit("NewUnit");	
+			layout->addWidget(edit4,1,5,1,2);
+			edit5=new QLineEdit("e.g. 1km+3m");
+			layout->addWidget(edit5,3,1,1,3);
+			edit6=new QLineEdit("Ans & Unit");
+			layout->addWidget(edit6,3,5,1,2);
+			edit6->setFocusPolicy(Qt::NoFocus);
 			edit3->setFocusPolicy(Qt::NoFocus);
-			layout->addWidget(edit3,1,4,1,1,Qt::AlignCenter);
-			//add lineedit
-			edit4=new QLineEdit("NewUnit");
-			layout->addWidget(edit4,1,5,1,1,Qt::AlignCenter);
-			connect(button1, SIGNAL(clicked()), this, SLOT(OnClicked())); 
-		}
+			connect(button1, SIGNAL(clicked()), this, SLOT(convert())); 
+			connect(button2, SIGNAL(clicked()), this, SLOT(calculate())); 
+			connect(button3, SIGNAL(clicked()), this, SLOT(unitMenu())); 
+		} 
 };
 
 int main(int argc,char *argv[]){
@@ -262,3 +322,4 @@ int main(int argc,char *argv[]){
 #include"main.moc"
 //因qt导致bug，不能识别cpp文件中的Q_OBJECT宏定义
 //使用MOC生成文件并在最后包含
+
