@@ -202,37 +202,43 @@ class mainWin:public QMainWindow{
 			else
 				edit3->setText("Err");
 		}
-		int calculate(){
+		int calculate()
+		{
 			string expression=(edit5->text()).toStdString()+"$";
-			int lastPos=-1;
-			unitNum ans=unitNum("");
-			bool first=true;
+			int last=-1;
+			unitNum res=unitNum("");
+			int first=1;
 			for(int i=0;i<(int)expression.length();i++)
 			{
 				if(expression[i]=='+' || expression[i]=='-' || expression[i]=='$')
 				{
-					if(first){
-						ans=unitNum(expression.substr(0,i));
-						lastPos=i;
-						first=false;
+					if(first)
+					{
+						res=unitNum(expression.substr(0,i));
+						last=i;
+						first=0;
 						continue;
 					}
-					if(i-lastPos-1==0){
+					if(i-last-1==0)
+					{
 						edit6->setText("Err");
 						return 1;
 					}
-					unitNum tmp=unitNum(expression.substr(lastPos+1,i-lastPos-1));
-					if(tmp.showUnitTypeName()!=ans.showUnitTypeName()){
+					unitNum temp=unitNum(expression.substr(last+1,i-last-1));
+					if(temp.showUnitTypeName()!=ans.showUnitTypeName())
+					{
 						edit6->setText("Err");
 						return 1;
 					}
-					if(expression[lastPos]=='+'){
-						ans=ans+tmp;
+					if(expression[last]=='+')
+					{
+						res=ans+temp;
 					}
-					else if(expression[lastPos]=='-'){
-						ans=ans-tmp;
+					else if(expression[last]=='-')
+					{
+						res=res-temp;
 					}
-					lastPos=i;
+					last=i;
 				}
 			}
 			edit6->setText(QString::fromStdString(to_string(ans.showVal())+ans.showUnit()));
